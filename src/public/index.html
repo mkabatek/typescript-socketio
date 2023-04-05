@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>socket.io loopback</title>
+</head>
+
+<body>
+    <h1>socket.io loopback</h1>
+    <form>
+        <input id="input" placeholder="Enter some data" autocomplete="off">
+        <button id="send-button">Send</button>
+    </form>
+
+    <div id="data-container"">
+        <ul id="messages"></ul>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const form = document.querySelector('form');
+        const dataInput = document.getElementById('input');
+        const sendButton = document.getElementById('send-button');
+        const dataContainer = document.getElementById('data-container');
+        const messages = document.getElementById('messages');
+
+        let data = '';
+
+        const socket = io();
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            data = dataInput.value;
+            if (data) {
+                socket.emit('send data', data);
+                dataInput.value = ''
+            }
+        });
+
+        socket.on('received data', (data) => {
+            const li = document.createElement('li');
+            li.textContent = `${data} received`;
+            messages.appendChild(li);
+        })
+
+    </script>
+</body>
+
+</html>
